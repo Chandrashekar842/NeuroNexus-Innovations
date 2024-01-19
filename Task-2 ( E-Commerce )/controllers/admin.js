@@ -5,8 +5,7 @@ export const getAddProduct = (req, res, next) => {
     pageTitle: 'Add-Product',
     path: '/admin/add-product',
     editing: false,
-    isAuthenticated: req.session.isLoggedIn,
-    csrfToken: req.csrfToken()
+    isAuthenticated: req.session.isLoggedIn
   })
 }
 
@@ -41,8 +40,7 @@ export const productsForAdmin = (req, res, next) => {
         prods: products, 
         pageTitle: 'Admin Products', 
         path: '/admin/products',
-        isAuthenticated: req.session.isLoggedIn,
-        csrfToken: req.csrfToken()
+        isAuthenticated: req.session.isLoggedIn
       })
     })
 }

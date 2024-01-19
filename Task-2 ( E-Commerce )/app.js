@@ -11,6 +11,7 @@ import mongoose from 'mongoose'
 import session from 'express-session'
 import connectMongoDbSession from 'connect-mongodb-session'
 import csrf from 'csurf'
+import flash from 'connect-flash'
 
 const app = express()
 
@@ -33,8 +34,6 @@ const store = new MongoDBStore({
 
 app.use(session({secret: 'My secret', resave: false, saveUninitialized: false, store: store}))
 
-app.use(csrfProtection)
-
 app.use((req, res, next) => {
    if(!req.session.user) {
       return next()
@@ -46,6 +45,8 @@ app.use((req, res, next) => {
       })
       .catch(err => console.log(err))
 })
+
+app.use(flash())
 
 app.use('/admin', adminrouter)
 app.use(shoprouter)

@@ -8,8 +8,7 @@ export const displayProducts = (req, res, next) => {
                 prods: products, 
                 pageTitle: "Products", 
                 path: "/products",
-                isAuthenticated: req.session.isLoggedIn,
-                csrfToken: req.csrfToken()
+                isAuthenticated: req.session.isLoggedIn
         })
     })
 }
@@ -20,8 +19,7 @@ export const moreProducts = (req, res, next) => {
             prods: products, 
             pageTitle: "Shop", 
             path: "/",
-            isAuthenticated: req.session.isLoggedIn,
-            csrfToken: req.csrfToken()
+            isAuthenticated: req.session.isLoggedIn
         })
     })
 }
@@ -33,8 +31,7 @@ export const getProduct = (req, res, next) => {
             prod: product, 
             pageTitle: product.title, 
             path: "/products",
-            isAuthenticated: req.session.isLoggedIn,
-            csrfToken: req.csrfToken()
+            isAuthenticated: req.session.isLoggedIn
          })
         console.log(product)
     })
@@ -68,8 +65,7 @@ export const getCart = (req, res, next) => {
                 pageTitle: 'Your Cart', 
                 products: products, 
                 total: total,
-                isAuthenticated: req.session.isLoggedIn,
-                csrfToken: req.csrfToken()
+                isAuthenticated: req.session.isLoggedIn
             })
         })
         .catch(err => console.log(err))
@@ -96,7 +92,7 @@ export const postOrder = (req, res, next) => {
             })
             const order = new Order({
                 user: {
-                    name: req.user.name,
+                    email: req.user.email,
                     userId: req.user
                 },
                 products: products
@@ -119,8 +115,7 @@ export const getOrders = (req, res, next) => {
                 path: '/orders',
                 pageTitle:'Your Orders',
                 orders: orders,
-                isAuthenticated: req.session.isLoggedIn,
-                csrfToken: req.csrfToken()
+                isAuthenticated: req.session.isLoggedIn
             })
         })
         .catch(err => console.log(err))
