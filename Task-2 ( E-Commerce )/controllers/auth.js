@@ -1,5 +1,26 @@
 import { User } from "../models/user.js"
 import bcrypt from 'bcryptjs'
+import nodemailer from 'nodemailer'
+
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "info.easybuycart@gmail.com",
+      pass: "xtsy rsax aoln ywfp"
+    },
+  });
+
+//   async function main() {
+//     // send mail with defined transport object
+//     const info = await transporter.sendMail({
+//       from: 'info.easybuycart.com', // sender address
+//       to: "email", // list of receivers
+//       subject: "Hello ✔", // Subject line
+//       text: "Hello world?", // plain text body
+//       html: "<b>Hello world?</b>", // html body
+//     });
 
 export const getLogin = (req, res, next) => {
     let message = req.flash('error')
@@ -87,7 +108,15 @@ export const postSignUp = (req, res, next) => {
                 })
                 .then(() => {
                     res.redirect('/login')
+                    return transporter.sendMail({
+                              from: 'info.easybuycart@gmail.com', // sender address
+                              to: email, // list of receivers
+                              subject: "SignUp Confirmation ✔", // Subject line
+                              html: "<b>You Successfully signed In. Happy Shopping</b>", // html body
+                            });
                 })
+                .catch(err => console.log(err))
+
         })
 
         .catch(err => console.log(err))
