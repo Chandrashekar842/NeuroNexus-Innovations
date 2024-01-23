@@ -1,4 +1,5 @@
 import express from 'express'
+import { check } from "express-validator";
 
 import { getLogin, postLogin, postLogOut, getSignUp, postSignUp, getReset, postReset, getNewPassword, postNewPassword } from '../controllers/auth.js'
 
@@ -12,7 +13,7 @@ authrouter.post('/logout', postLogOut)
 
 authrouter.get('/signup', getSignUp)
 
-authrouter.post('/signup', postSignUp)
+authrouter.post('/signup', check('email').isEmail().withMessage('Enter a valid email!'), postSignUp)
 
 authrouter.get('/reset', getReset)
 

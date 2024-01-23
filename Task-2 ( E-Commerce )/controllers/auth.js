@@ -2,6 +2,8 @@ import { User } from "../models/user.js"
 import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
 import crypto from 'crypto'
+import { validationResult } from "express-validator"
+import { error } from "console"
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -12,16 +14,6 @@ const transporter = nodemailer.createTransport({
         pass: "xtsy rsax aoln ywfp"
     },
 });
-
-//   async function main() {
-//     // send mail with defined transport object
-//     const info = await transporter.sendMail({
-//       from: 'info.easybuycart.com', // sender address
-//       to: "email", // list of receivers
-//       subject: "Hello ✔", // Subject line
-//       text: "Hello world?", // plain text body
-//       html: "<b>Hello world?</b>", // html body
-//     });
 
 export const getLogin = (req, res, next) => {
     let message = req.flash('error')
@@ -92,6 +84,15 @@ export const getSignUp = (req, res, next) => {
 
 export const postSignUp = (req, res, next) => {
     const { email, password, confirmpassword } = req.body
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) {
+        return res.status(422).render('auth/signup', {
+            path: '/signup',
+            pageTitle: 'SignUp',
+            errorMessage:  errors.array()[0].msg,
+            isAuthenticated: req.session.isLoggedIn
+        })
+    }
     User.findOne({ email: email })
         .then(userdoc => {
             if (userdoc) {
