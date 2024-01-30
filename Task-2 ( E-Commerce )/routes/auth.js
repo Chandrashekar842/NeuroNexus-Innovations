@@ -19,6 +19,7 @@ authrouter.post('/signup',
             check('email')
                 .isEmail()
                 .withMessage('Enter a valid email!')
+                .normalizeEmail()
                 .custom((value, {req}) => {
                     return User.findOne({email: value})
                         .then(userDoc => {
@@ -31,8 +32,9 @@ authrouter.post('/signup',
                 }),
             body('password', 'Please enter a password with only letters and numbers and atleast 5 characters')
                 .isLength({min: 5})
-                .isAlphanumeric(),
-            body('confirmpassword').custom((value, {req}) => {
+                .isAlphanumeric()
+                .trim(),
+            body('confirmpassword').trim().custom((value, {req}) => {
                 if(value !== req.body.password) {
                     throw new Error('Passwords are not matched!')
                 }

@@ -5,7 +5,7 @@ import shoprouter from './routes/shop.js'
 import authrouter from './routes/auth.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { error } from './controllers/error.js'
+import { error, pageNotFound } from './controllers/error.js'
 import { User } from './models/user.js'
 import mongoose from 'mongoose'
 import session from 'express-session'
@@ -40,10 +40,15 @@ app.use((req, res, next) => {
    }
    User.findById(req.session.user._id)
       .then(user => {
+         if(!user) {
+            return next()
+         }
          req.user = user
          next()
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+         throw new Error(err)
+      })
 })
 
 app.use(flash())
@@ -52,7 +57,8 @@ app.use('/admin', adminrouter)
 app.use(shoprouter)
 app.use(authrouter)
 
-app.use(error)
+app.get('/500', error)
+app.use(pageNotFound)
 
 mongoose.connect('mongodb+srv://Chandu21:Chandu21@cluster0.0sbmxs4.mongodb.net/shop?retryWrites=true&w=majority')
       .then(result => {
