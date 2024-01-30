@@ -1,7 +1,8 @@
 import express from 'express'
-import { check } from "express-validator";
+import { check, body } from "express-validator";
 
 import { getLogin, postLogin, postLogOut, getSignUp, postSignUp, getReset, postReset, getNewPassword, postNewPassword } from '../controllers/auth.js'
+import { User } from '../models/user.js';
 
 const authrouter = express.Router()
 
@@ -13,7 +14,32 @@ authrouter.post('/logout', postLogOut)
 
 authrouter.get('/signup', getSignUp)
 
-authrouter.post('/signup', check('email').isEmail().withMessage('Enter a valid email!'), postSignUp)
+authrouter.post('/signup', 
+        [
+            check('email')
+                .isEmail()
+                .withMessage('Enter a valid email!')
+                .custom((value, {req}) => {
+                    return User.findOne({email: value})
+                        .then(userDoc => {
+                            if(userDoc) {
+                                return Promise.reject(
+                                    'E-mail exists already, please pick a different one'
+                                )
+                            }
+                        })
+                }),
+            body('password', 'Please enter a password with only letters and numbers and atleast 5 characters')
+                .isLength({min: 5})
+                .isAlphanumeric(),
+            body('confirmpassword').custom((value, {req}) => {
+                if(value !== req.body.password) {
+                    throw new Error('Passwords are not matched!')
+                }
+                return true
+            })
+        ],
+        postSignUp)
 
 authrouter.get('/reset', getReset)
 

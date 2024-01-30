@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
 import crypto from 'crypto'
 import { validationResult } from "express-validator"
-import { error } from "console"
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -26,18 +25,47 @@ export const getLogin = (req, res, next) => {
         path: '/login',
         pageTitle: 'Login',
         isAuthenticated: req.session.isLoggedIn,
-        errorMessage: message
+        errorMessage: message,
+        oldInput: {
+            email: '',
+            password: ''
+        },
+        validateError: []
     })
 }
 
 export const postLogin = (req, res, next) => {
     const email = req.body.email
     const password = req.body.password
+    
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) {
+        return res.status(422).render('auth/login', {
+            path: '/login',
+            pageTitle: 'Login',
+            errorMessage: errors.array()[0].msg,
+            isAuthenticated: req.session.isLoggedIn,
+            oldInput: {
+                email: email,
+                password: password
+            },
+            validateError: errors.array()
+        })
+    }
     User.findOne({ email: email })
         .then(user => {
             if (!user) {
-                req.flash('error', 'Invalid Email')
-                return res.redirect('/login')
+                return res.render('auth/login', {
+                    path: '/login',
+                    pageTitle: 'Login',
+                    isAuthenticated: req.session.isLoggedIn,
+                    errorMessage: 'Invalid email',
+                    oldInput: {
+                        email: email,
+                        password: password
+                    },
+                    validateError: []
+                })
             }
             bcrypt.compare(password, user.password)
                 .then(doMatch => {
@@ -48,14 +76,18 @@ export const postLogin = (req, res, next) => {
                             console.log(err)
                             res.redirect('/')
                         })
-                    } else {
-                        req.flash('error', 'Invalid Password')
-                        res.redirect('/login')
                     }
-                })
-                .catch(err => {
-                    console.log(err)
-                    res.redirect('/login')
+                    return res.status(422).render('auth/login', {
+                        path: '/login',
+                        pageTitle: 'Login',
+                        errorMessage: 'Invalid password',
+                        isAuthenticated: req.session.isLoggedIn,
+                        oldInput: {
+                            email: email,
+                            password: password
+                        },
+                        validateError: []
+                    })
                 })
         })
         .catch(err => console.log(err))
@@ -78,49 +110,51 @@ export const getSignUp = (req, res, next) => {
         path: '/signup',
         pageTitle: 'Signup',
         isAuthenticated: req.session.isLoggedIn,
-        errorMessage: message
+        errorMessage: message,
+        oldInput: {
+            email: '',
+            password: '',
+            confirmpassword: ''
+        },
+        validateError: []
     })
 }
 
 export const postSignUp = (req, res, next) => {
-    const { email, password, confirmpassword } = req.body
+    const { email, password } = req.body
     const errors = validationResult(req)
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return res.status(422).render('auth/signup', {
             path: '/signup',
             pageTitle: 'SignUp',
-            errorMessage:  errors.array()[0].msg,
-            isAuthenticated: req.session.isLoggedIn
+            errorMessage: errors.array()[0].msg,
+            isAuthenticated: req.session.isLoggedIn,
+            oldInput: {
+                email: email,
+                password: password,
+                confirmpassword: req.body.confirmpassword,
+            },
+            validateError: errors.array()
         })
     }
-    User.findOne({ email: email })
-        .then(userdoc => {
-            if (userdoc) {
-                req.flash('error', 'Email already registered!')
-                return res.redirect('/signup')
-            }
-            return bcrypt.hash(password, 12)
-                .then(hashedPassword => {
-                    const user = new User({
-                        email: email,
-                        password: hashedPassword,
-                        cart: { items: [] }
-                    })
-                    return user.save()
-                })
-                .then(() => {
-                    res.redirect('/login')
-                    return transporter.sendMail({
-                        from: 'info.easybuycart@gmail.com', // sender address
-                        to: email, // list of receivers
-                        subject: "SignUp Confirmation ✔", // Subject line
-                        html: "<b>You Successfully signed In. Happy Shopping</b>", // html body
-                    });
-                })
-                .catch(err => console.log(err))
-
+    bcrypt.hash(password, 12)
+        .then(hashedPassword => {
+            const user = new User({
+                email: email,
+                password: hashedPassword,
+                cart: { items: [] }
+            })
+            return user.save()
         })
-
+        .then(() => {
+            res.redirect('/login')
+            return transporter.sendMail({
+                from: 'info.easybuycart@gmail.com', // sender address
+                to: email, // list of receivers
+                subject: "SignUp Confirmation ✔", // Subject line
+                html: "<b>You Successfully signed In. Happy Shopping</b>", // html body
+            });
+        })
         .catch(err => console.log(err))
 }
 
@@ -200,10 +234,11 @@ export const postNewPassword = (req, res, next) => {
     const passwordToken = req.body.passwordToken
     let resetUser
 
-    User.findOne({ resetToken: passwordToken, 
-            resetTokenExpiration: {$gt: Date.now()}, 
-            _id: userId 
-        })
+    User.findOne({
+        resetToken: passwordToken,
+        resetTokenExpiration: { $gt: Date.now() },
+        _id: userId
+    })
         .then(user => {
             console.log(user)
             resetUser = user
