@@ -181,7 +181,7 @@
 
 .book {
     background: #F5F5DC;
-    padding: 40px;
+    padding: 30px;
 }
 
 .main-text h1 {
@@ -246,4 +246,64 @@
     .main-text h1 {
         padding: 20px;
     }
+}
+
+.packages {
+    padding: 15px 0px;
+}
+
+.packages .card img {
+    height: 270px;
+    border-radius: 6px 6px 0px 0px;
+}
+
+.main-txt h1 {
+    text-align: center;
+    margin-top: 30px;
+    font-weight: 600;
+    text-shadow: 0px 1px 1px black;
+}
+
+.main-txt h1 span {
+    color: #f81d1d;
+}
+
+.packages .card {
+    border-radius: 6px;
+    border: none;
+    box-shadow: rgba(0,0,0,0.3) 0px 4px 12px;
+}
+
+.packages .card .card-body {
+    background: transparent;
+}
+
+.packages .card .card-body h3 {
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.packages .card .card-body p {
+    font-size: 15px;
+}
+
+.checked {
+    color: #f81d1d;
+}
+
+.star i {
+    font-size: 15px;
+}
+
+.packages .card .card-body h6 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.packages .card .card-body a {
+    padding: 12px 40px;
+    background: #f81d1d;
+    text-decoration: none;
+    color: white;
+    border-radius: 10px;
 }
