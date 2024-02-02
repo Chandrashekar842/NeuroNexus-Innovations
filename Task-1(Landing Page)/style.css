@@ -58,6 +58,7 @@
     background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url(Images/backgroundHD.jpg);
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 }
 
 .home .content {
@@ -235,8 +236,11 @@
     transform: translateY(2px);
 }
 
-.card img {
+.book .card img {
     height: 550px;
+    max-width: 100%; 
+    height: auto; 
+    display: block;
 }
 
 @media (max-width: 765px) {
@@ -272,6 +276,12 @@
     border-radius: 6px;
     border: none;
     box-shadow: rgba(0,0,0,0.3) 0px 4px 12px;
+}
+
+.packages .card img {
+    max-width: 100%;
+    height: auto;
+    display: block; 
 }
 
 .packages .card .card-body {
@@ -348,8 +358,99 @@
 .gallery .card img {
     border-radius: 10px;
     transition: 0.5s;
+    max-width: 100%;
+    height: auto;
+    display: block; 
 }
 
 .gallery .card img:hover {
     transform: scale(1.1);
+}
+
+.about {
+    margin-top: 50px;
+    background: #f9f9f9;
+    padding: 50px;
+}
+
+.about .card {
+    border-radius: 10px;
+}
+
+.about .card img {
+    border-radius: 10px;
+    height: 4%;
+}
+
+.about .card h2 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.about .card p {
+    font-weight: 500;
+}
+
+.about button {
+    width: 150px;
+    height: 38px;
+    border: none;
+    border-radius: 5px;
+    background: #f81d1d;
+    color: white;
+    letter-spacing: 2px;
+    font-weight: 550;
+    transition: 0.5s ease;
+}
+
+.about button:active {
+    transform: translateY(3px);
+    color: white;
+}
+
+.about button:hover {
+    color: white;
+}
+
+@media (max-width: 765px) {
+    .about {
+        padding: 0;
+    }
+}
+
+#footer {
+    width: 100%;
+    margin-top: 150px;
+    text-align: center;
+    background: rgb(0, 0, 0);
+}
+
+#footer h1 {
+    font-weight: 600;
+    padding-top: 30px;
+    color: white;
+}
+
+#footer h1 span {
+    color:#f81d1d;
+}
+
+#footer p {
+    color: white;
+}
+
+.social-links i {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 20px;
+    background: white;
+    color: black;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    transition: 0.5s ease;
+    cursor: pointer;
+}
+
+.social-links i:hover {
+    transform: scale(1.3);
 }
