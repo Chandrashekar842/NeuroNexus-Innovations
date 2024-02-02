@@ -307,3 +307,49 @@
     color: white;
     border-radius: 10px;
 }
+
+.services {
+    background: #f9f9f9;
+    margin-top: 50px;;
+}
+
+.services .card {
+    box-shadow: 0px 5px 5px -6px black;
+    border: none;
+    cursor: pointer;
+}
+
+.services .card i {
+    font-size: 80px;
+    text-align: center;
+    color: #f81d1d;
+    margin-top: 20px;
+}
+
+.services .card .card-body h3 {
+    text-align: center;
+    font-weight: 600;
+}
+
+.services .card .card-body {
+    text-align: center;
+}
+
+.gallery {
+    margin-top: 50px;
+}
+
+.gallery .card {
+    border-radius: 10px;
+    box-shadow: rgba(0,0,0,0.3) 0px 4px 12px;
+    cursor: pointer;
+}
+
+.gallery .card img {
+    border-radius: 10px;
+    transition: 0.5s;
+}
+
+.gallery .card img:hover {
+    transform: scale(1.1);
+}
